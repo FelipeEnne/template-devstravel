@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
 PreferredSizeWidget CustomAppBar(
-    {String title = "", bool hideSearch = false, bool showBack = false}) {
+    {String title = "",
+    bool hideSearch = false,
+    bool showBack = false,
+    GlobalKey<ScaffoldState>? scaffoldKey,
+    BuildContext? pageContext}) {
+  void searchAction() {
+    if (pageContext != null) {
+      Navigator.pushReplacementNamed(pageContext, '/search');
+    }
+  }
+
   IconButton drawerIcon = IconButton(
-      onPressed: () {},
+      onPressed: () {
+        scaffoldKey?.currentState?.openDrawer();
+      },
       icon: Icon(
         Icons.menu,
         color: Colors.black,
@@ -11,7 +23,11 @@ PreferredSizeWidget CustomAppBar(
       ));
 
   IconButton backIcon = IconButton(
-      onPressed: () {},
+      onPressed: () {
+        if (pageContext != null) {
+          Navigator.pop(pageContext);
+        }
+      },
       icon: Icon(
         Icons.arrow_back,
         color: Colors.black,
@@ -40,7 +56,7 @@ PreferredSizeWidget CustomAppBar(
     actions: <Widget>[
       !hideSearch
           ? IconButton(
-              onPressed: () {},
+              onPressed: searchAction,
               icon: Icon(
                 Icons.search,
                 color: Colors.black,

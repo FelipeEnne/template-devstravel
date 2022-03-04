@@ -4,6 +4,7 @@ import '../models/appdata.dart';
 import '../partials/customappbar.dart';
 
 class HomePage extends StatelessWidget {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   TextStyle styles = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.bold,
@@ -14,10 +15,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppData>(
       builder: (ctx, appdata, child) => Scaffold(
+          key: _scaffoldKey,
           appBar: CustomAppBar(
-            title: 'Home',
-            hideSearch: false,
-          ),
+              scaffoldKey: _scaffoldKey,
+              pageContext: context,
+              title: 'Home',
+              hideSearch: false),
+          drawer: Drawer(),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
