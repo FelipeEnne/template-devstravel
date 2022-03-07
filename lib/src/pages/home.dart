@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/appdata.dart';
 import '../partials/customappbar.dart';
+import '../partials/customdrawer.dart';
 
 class HomePage extends StatelessWidget {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -21,7 +22,7 @@ class HomePage extends StatelessWidget {
               pageContext: context,
               title: 'Home',
               hideSearch: false),
-          drawer: Drawer(),
+          drawer: CustomDrawer(pageContext: context),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
