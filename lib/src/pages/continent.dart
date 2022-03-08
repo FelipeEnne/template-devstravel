@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/appdata.dart';
 import '../partials/customappbar.dart';
 import '../partials/customdrawer.dart';
+import '../partials/citybox.dart';
 
 class ContinentPage extends StatelessWidget {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -11,6 +12,9 @@ class ContinentPage extends StatelessWidget {
     fontWeight: FontWeight.bold,
     fontFamily: 'Helvetica Neue',
   );
+
+  void seeCityAction(continentIndex) {}
+  void cityBoxAction(cityData) {}
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,54 @@ class ContinentPage extends StatelessWidget {
               body: ListView.builder(
                   itemCount: appdata.data.length,
                   itemBuilder: (context, index) {
-                    return Text('Continente: ${appdata.data[index]['name']}');
+                    var cities = [];
+                    for (var country in appdata.data[index]['countries']) {
+                      cities.addAll(country['cities']);
+                    }
+
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 15),
+                              child: Text(
+                                '${appdata.data[index]['name']} (${cities.length})',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Helvetica Neue'),
+                              ),
+                            ),
+                            FlatButton(
+                                onPressed: () {
+                                  seeCityAction(index);
+                                },
+                                child: Text('Ver cidades',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Helvetica Neue',
+                                        color: Colors.grey)))
+                          ],
+                        ),
+                        Container(
+                          height: 130,
+                          margin: EdgeInsets.only(bottom: 15),
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: cities.length,
+                              itemBuilder: (cityContext, cityIndex) {
+                                return CityBox(
+                                    data: cities[cityIndex],
+                                    onTap: () {
+                                      cityBoxAction(cities);
+                                    });
+                              }),
+                        )
+                      ],
+                    );
                   }),
             ));
   }
