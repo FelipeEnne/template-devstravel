@@ -17,7 +17,9 @@ class ContinentPage extends StatelessWidget {
     Navigator.pushNamed(context, '/listcities', arguments: continentIndex);
   }
 
-  void cityBoxAction(cityData) {}
+  void cityBoxAction(pageContext, cityData) {
+    Navigator.pushNamed(pageContext, '/city', arguments: cityData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +77,8 @@ class ContinentPage extends StatelessWidget {
                               itemBuilder: (cityContext, cityIndex) {
                                 return CityBox(
                                     data: cities[cityIndex],
-                                    onTap: () {
-                                      cityBoxAction(cities);
+                                    onTap: (cityData) {
+                                      cityBoxAction(context, cityData);
                                     });
                               }),
                         )

@@ -6,6 +6,7 @@ import 'src/pages/preload.dart';
 import 'src/pages/search.dart';
 import 'src/pages/continent.dart';
 import 'src/pages/listcities.dart';
+import 'src/pages/city.dart';
 
 void main() => runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (context) => AppData())],
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/search': (context) => SearchPage(),
         '/continent': (context) => ContinentPage(),
-        '/listcities': (context) => ListCitiesPage()
+        '/listcities': (context) => ListCitiesPage(),
+        '/city': (context) => City()
       },
       initialRoute: '/preload',
     );
