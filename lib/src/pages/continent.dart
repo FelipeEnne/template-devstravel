@@ -13,7 +13,10 @@ class ContinentPage extends StatelessWidget {
     fontFamily: 'Helvetica Neue',
   );
 
-  void seeCityAction(continentIndex) {}
+  void seeCityAction(context, int continentIndex) {
+    Navigator.pushNamed(context, '/listcities', arguments: continentIndex);
+  }
+
   void cityBoxAction(cityData) {}
 
   @override
@@ -53,7 +56,7 @@ class ContinentPage extends StatelessWidget {
                             ),
                             FlatButton(
                                 onPressed: () {
-                                  seeCityAction(index);
+                                  seeCityAction(context, index);
                                 },
                                 child: Text('Ver cidades',
                                     style: TextStyle(
@@ -64,7 +67,7 @@ class ContinentPage extends StatelessWidget {
                           ],
                         ),
                         Container(
-                          height: 130,
+                          height: 150,
                           margin: EdgeInsets.only(bottom: 15),
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
