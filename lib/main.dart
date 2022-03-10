@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         '/search': (context) => SearchPage(),
         '/continent': (context) => ContinentPage(),
         '/listcities': (context) => ListCitiesPage(),
-        '/city': (context) => City()
+        '/city': (context) => CityPage()
       },
       initialRoute: '/preload',
     );

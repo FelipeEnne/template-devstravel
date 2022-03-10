@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:http/retry.dart';
 import 'package:provider/provider.dart';
 import '../models/appdata.dart';
-import '../partials/customappbar.dart';
 import '../partials/customdrawer.dart';
 
-class City extends StatelessWidget {
+class CityPage extends StatefulWidget {
+  @override
+  _CityPage createState() => _CityPage();
+}
+
+class _CityPage extends State<CityPage> {
+  bool heart = false;
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   TextStyle styles = TextStyle(
     fontSize: 15,
@@ -22,9 +29,21 @@ class City extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
     final double statusBarHeight = MediaQuery.of(context).padding.top;
+    final double footerHeight = MediaQuery.of(context).padding.bottom;
 
-    return Consumer<AppData>(
-      builder: (ctx, appdata, child) => Scaffold(
+    var starRate = double.parse(cityData['review']).floor();
+    var stars = [];
+    for (var i = 0; i < 5; i++) {
+      if (i < starRate) {
+        stars.add(true);
+      } else {
+        stars.add(false);
+      }
+    }
+    return Consumer<AppData>(builder: (ctx, appdata, child) {
+      heart = appdata.hasFavorites(cityData['name']);
+
+      return Scaffold(
           key: _scaffoldKey,
           drawer: CustomDrawer(pageContext: context),
           backgroundColor: Colors.white,
@@ -71,38 +90,48 @@ class City extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.star,
-                                          color: Colors.blue,
+                                          color: stars[0]
+                                              ? Colors.blue
+                                              : Colors.grey,
                                           size: 16,
                                         ),
                                         Icon(
                                           Icons.star,
-                                          color: Colors.blue,
+                                          color: stars[1]
+                                              ? Colors.blue
+                                              : Colors.grey,
                                           size: 16,
                                         ),
                                         Icon(
                                           Icons.star,
-                                          color: Colors.blue,
+                                          color: stars[2]
+                                              ? Colors.blue
+                                              : Colors.grey,
                                           size: 16,
                                         ),
                                         Icon(
                                           Icons.star,
-                                          color: Colors.blue,
+                                          color: stars[3]
+                                              ? Colors.blue
+                                              : Colors.grey,
                                           size: 16,
                                         ),
                                         Icon(
                                           Icons.star,
-                                          color: Colors.grey,
+                                          color: stars[4]
+                                              ? Colors.blue
+                                              : Colors.grey,
                                           size: 16,
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(left: 5),
                                           child: Text(
-                                            '4.2',
+                                            cityData['review'],
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica Neue',
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.blue),
+                                                color: Colors.grey),
                                           ),
                                         )
                                       ],
@@ -114,14 +143,91 @@ class City extends StatelessWidget {
                                 margin: EdgeInsets.all(10),
                                 child: IconButton(
                                   icon: Icon(
-                                    Icons.favorite_border,
+                                    heart
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
                                     color: Colors.red,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      heart =
+                                          appdata.favorite(cityData['name']);
+                                    });
+                                  },
                                 ),
                               )
                             ],
-                          )
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: 0, left: 15, right: 15, bottom: 10),
+                            child: Text(
+                              cityData['description'],
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica Neue',
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey),
+                            ),
+                          ),
+                          Divider(
+                            thickness: 1,
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(10),
+                            child: Text(
+                              "PRINCIPAIS PONTOS TURISTICOS",
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica Neue',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          GridView.count(
+                              padding: EdgeInsets.only(bottom: footerHeight),
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              crossAxisCount: 2,
+                              childAspectRatio: 10 / 11,
+                              children: List.generate(cityData['places'].length,
+                                  (index) {
+                                return Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          child: AspectRatio(
+                                        aspectRatio: 1 / 1,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: Image.network(
+                                            cityData['places'][index]['img'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )),
+                                      Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          child: Text(
+                                              cityData['places'][index]['name'],
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica Neue',
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black))),
+                                      Container(
+                                        child: Text('Ponto Turístico',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica Neue',
+                                                fontSize: 12,
+                                                color: Colors.black)),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }))
                         ],
                       ))
                 ],
@@ -140,7 +246,7 @@ class City extends StatelessWidget {
                 ),
               )
             ],
-          )),
-    );
+          ));
+    });
   }
 }
